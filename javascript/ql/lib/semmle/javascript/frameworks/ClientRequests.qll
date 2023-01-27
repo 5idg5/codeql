@@ -204,9 +204,14 @@ module ClientRequest {
     string method;
 
     AxiosUrlRequest() {
-      this = API::moduleImport("axios").getACall() and method = "request"
+      this = [API::moduleImport("axios").getACall(), DataFlow::globalVarRef("axios").getACall()] and
+      method = "request"
       or
-      this = API::moduleImport("axios").getMember(method).getACall() and
+      this =
+        [
+          API::moduleImport("axios").getMember(method).getACall(),
+          DataFlow::globalVarRef("axios").getAMemberCall(method)
+        ] and
       method = [httpMethodName(), "request"]
     }
 
